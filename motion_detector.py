@@ -2,24 +2,30 @@ import cv2
 import os
 import time
 import requests
+import configparser
 from yolo_detector import YOLODetector
 
 
 class MotionDetector:
+    def __init__(self, config_file="config.ini"):
+        config = configparser.ConfigParser()
+        config.read(config_file)
 
-    def __init__(self, min_area=8000, blur_size=(25, 25), threshold_value=30):
+        self.TELEGRAM_BOT_TOKEN = config["Telegram"]["BOT_TOKEN"]
+        self.TELEGRAM_CHAT_ID = config["Telegram"]["CHAT_ID"]
+
+        self.min_area = int(config["MotionDetection"]["MIN_AREA"])
+        self.blur_size = tuple(map(int, config["MotionDetection"]["BLUR_SIZE"].split(",")))
+        self.threshold_value = int(config["MotionDetection"]["THRESHOLD"])
+
         self.camera = cv2.VideoCapture(0)
         self.first_frame = None
         self.is_recording = False
         self.video_writer = None
         self.last_motion_time = None
-        self.min_area = min_area
-        self.blur_size = blur_size
-        self.threshold_value = threshold_value
-        self.TELEGRAM_BOT_TOKEN = "7895698771:AAF_VIwnPrFQ57GzC1lkKWa59uIBzO89_Ho"
-        self.TELEGRAM_CHAT_ID = "7824475671"
         self.last_telegram_time = 0
         self.yolo = YOLODetector()
+
         os.makedirs("videos", exist_ok=True)
 
     def send_telegram_alert(self, message):
