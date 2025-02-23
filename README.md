@@ -43,7 +43,7 @@ Damit das Projekt funktioniert, benötigst du:
 
 5. **Telegram Bot einrichten:**
    - Erstelle einen Bot mit [BotFather](https://t.me/BotFather)
-   - Speichere den API-Token in `config.py`:
+   - Speichere den API-Token in `config.ini`:
      ```python
      TELEGRAM_BOT_TOKEN = "dein_token"
      TELEGRAM_CHAT_ID = "deine_chat_id"
