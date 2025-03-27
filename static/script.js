@@ -1,19 +1,34 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const recordBtn = document.getElementById("record-btn");
+import React, { useState, useEffect } from 'react';
 
-    if (recordBtn) {
-        recordBtn.addEventListener("click", function () {
-            fetch("/toggle_recording", { method: "POST" })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.recording) {
-                        recordBtn.textContent = "🛑 Stop Recording";
-                        recordBtn.className = "btn btn-danger";
-                    } else {
-                        recordBtn.textContent = "🎥 Start Recording";
-                        recordBtn.className = "btn btn-success";
-                    }
-                });
-        });
-    }
-});
+const RecordButton = () => {
+    const [isRecording, setIsRecording] = useState(false);
+
+    useEffect(() => {
+        const recordBtn = document.getElementById("record-btn");
+        return () => {
+        };
+    }, []);
+
+    const handleClick = async () => {
+        const response = await fetch("/toggle_recording", { method: "POST" });
+        const data = await response.json();
+
+        if (data.recording) {
+            setIsRecording(true);
+        } else {
+            setIsRecording(false);
+        }
+    };
+
+    return (
+        <button
+            id="record-btn"
+            onClick={handleClick}
+            className={isRecording ? "btn btn-danger" : "btn btn-success"}
+        >
+            {isRecording ? "🛑 Stop Recording" : "🎥 Start Recording"}
+        </button>
+    );
+};
+
+export default RecordButton;
